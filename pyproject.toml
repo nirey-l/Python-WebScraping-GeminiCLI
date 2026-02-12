@@ -6,4 +6,13 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "requests>=2.32.5",
+    "beautifulsoup4",
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "koreanize-matplotlib",
+    "loguru",
+    "wordcloud",
 ]

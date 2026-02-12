@@ -31,6 +31,7 @@ uv add requests beautifulsoup4 pandas numpy matplotlib seaborn scikit-learn kore
 
 ### 3. Matplotlib 한글 설정 
 
+한글 폰트를 직접 설정한다면 아래와 같은 폰트를 사용하세요
 * Windows OS에서는 'Malgun Gothic' 폰트를 사용하세요.
 * Mac OS에서는 'AppleGothic' 폰트를 사용하세요.
 
@@ -42,9 +43,11 @@ uv add requests beautifulsoup4 pandas numpy matplotlib seaborn scikit-learn kore
 ```python
 import koreanize_matplotlib
 ```
-* seaborn의 스타일 설정은 사용하지 말 것
 
-### 4. 로깅 (loguru 사용)
+### 4. 시각화 관련 설정
+* seaborn의 스타일 설정은 사용하지 말고 matplotlib를 사용하세요.
+
+### 5. 로깅 (loguru 사용)
 
 `loguru`는 파이썬 로깅을 쉽고 강력하게 만들어주는 라이브러리입니다.
 
@@ -77,12 +80,14 @@ logger.add("file_{time}.log", rotation="500 MB") # 500MB 마다 로그 파일 �
     │   └── data/
     ├── project_B/
     │   └── data/
-    └── ...
+    └── project.toml
+    └── uv.lock
     ```
     *   **`.venv/`**: 모든 프로젝트가 공유하는 파이썬 가상 환경입니다.
     *   **`project_A/`, `project_B/`**: 개별 프로젝트 폴더입니다. 각 프로젝트는 자체 데이터(`data`) 디렉토리를 가집니다.
+    *   **project.toml**, **uv.lock**: uv 의존성 관련 파일입니다.
 
-## 데이터 스크래핑할 때 다음의 정보를 꼭 문서에 포함 할 것 
+## 데이터를 웹스크래핑할 때 다음의 정보를 꼭 문서에 포함할 것
 
 ### 네트워크 메뉴를 통해 실제 데이터를 가져오는 URL
 ### 해당 Request에 대한 Header 정보
