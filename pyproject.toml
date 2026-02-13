@@ -15,4 +15,5 @@ dependencies = [
     "koreanize-matplotlib",
     "loguru",
     "wordcloud",
+    "setuptools>=82.0.0",
 ]
