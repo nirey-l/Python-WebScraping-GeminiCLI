@@ -13,6 +13,15 @@ REPORT_PATH = "starbucks_stores/eda_report.md"
 IMAGE_DIR = "starbucks_stores/images"
 logger.add("starbucks_stores/eda_{time}.log", rotation="500 MB", encoding="utf-8")
 
+# 서비스 코드 매핑
+SERVICE_MAP = {
+    "T30": "사이렌오더", "T20": "현금없는매장", "T17": "주차가능", "T05": "카드충전",
+    "T65": "공기청정기", "T16": "친환경매장", "T08": "무선인터넷", "T32": "전자영수증",
+    "T56": "디카페인", "T52": "에코매장", "T34": "딜리버스", "T21": "기프트카드",
+    "T43": "현금영수증", "P80": "블론드", "P90": "티바나", "Z9999": "일반서비스",
+    "T57": "피지오", "T69": "온라인 예약"
+}
+
 # --- 보고서 생성을 위한 헬퍼 함수 ---
 def add_to_report(content, is_code=False):
     """마크다운 보고서에 내용을 추가합니다."""
@@ -121,10 +130,17 @@ def main():
     # --- 2. 매장 특성 분석 (theme_state) ---
     add_to_report("## 2. 매장 특성 분석 (theme_state)")
 
-    # theme_state에서 특성 추출
+    # theme_state에서 특성 추출 및 매핑
     all_themes = []
-    df['theme_state'].dropna().str.split('@').apply(lambda themes: all_themes.extend(theme for theme in themes if theme))
+    def map_theme(themes):
+        if pd.isna(themes): return
+        for theme in themes.split('@'):
+            if theme:
+                # 매핑된 이름이 있으면 사용, 없으면 코드 그대로 사용 (또는 무시 가능)
+                mapped_name = SERVICE_MAP.get(theme, theme)
+                all_themes.append(mapped_name)
 
+    df['theme_state'].apply(map_theme)
     feature_summary = pd.Series(all_themes).value_counts()
 
     if not feature_summary.empty:
@@ -138,9 +154,8 @@ def main():
         feature_summary_df.head(10).set_index('특징').plot(kind='bar', ax=ax)
         ax.set_title('상위 10개 매장 서비스/특징')
         ax.set_ylabel('매장 수')
+        plt.xticks(rotation=45)
         save_plot(fig, 'top10_features.png', '상위 10개 매장 서비스/특징')
-        add_to_report(feature_summary_df.head(10).to_markdown())
-
     else:
         add_to_report("분석할 수 있는 매장 특성(theme_state) 정보가 부족합니다.")
 
